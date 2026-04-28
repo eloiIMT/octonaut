@@ -8,7 +8,6 @@ export async function initScene() {
     const width = window.innerWidth, height = window.innerHeight;
 
     const camera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 1000 );
-    camera.position.z = 1;
 
     const scene = new THREE.Scene();
     const loader = new GLTFLoader();
@@ -52,7 +51,6 @@ export async function initScene() {
         }
     });
 
-    // Après avoir chargé la scène:
     const customMat = createCustomMaterial('scaphandre');
     applyMaterialToObject(loadedScene, customMat, 'Circle002');
 
@@ -78,17 +76,19 @@ export async function initScene() {
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
+    controls.minDistance = 25;
+    controls.maxDistance = 100;
+    controls.maxPolarAngle = Math.PI / 2; 
+    controls.enablePan = false;
 
-    // Ajuste la camera pour cadrer l'objet
     const box = new THREE.Box3().setFromObject(loadedScene);
     const size = box.getSize(new THREE.Vector3()).length();
     const center = box.getCenter(new THREE.Vector3());
 
-    camera.position.copy(center);
-    camera.position.z += size * 1.5;
-    camera.lookAt(center);
+    const poulpe = loadedScene.getObjectByProperty('name', 'Circle001');
 
-    controls.target.copy(center);
+    controls.target.copy(poulpe.position);
+    camera.position.set(25, 11, 7);
 
     let lastTime = performance.now();
     function animate( time ) {
