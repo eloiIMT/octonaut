@@ -71,6 +71,9 @@ export async function initScene() {
         applyMaterialToObject(loadedScene, flashMat, name);
     });
 
+    const lumiere = loadedScene.getObjectByProperty('name', 'DirectionalLight');
+    lumiere.intensity = 1.5;
+
     const asteroid = loadedScene.getObjectByProperty('uuid','d7ea1690-9aec-4808-9094-cc1fe5118e26');
     const asteroidMat = createAsteroidMaterial(textureLoader);
     applyAsteroidMaterial(asteroid, asteroidMat);
@@ -82,6 +85,8 @@ export async function initScene() {
     const renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( width, height );
     document.body.appendChild( renderer.domElement );
+
+    renderer.outputColorSpace = THREE.NoColorSpace;
 
     const pmrem = new THREE.PMREMGenerator(renderer);
     pmrem.compileEquirectangularShader();
