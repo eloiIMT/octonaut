@@ -47,7 +47,7 @@ export function applyMaterialToObject(object, material, objectName = null) {
     });
 }
 
-export function createAsteroidMaterial(textureLoader, basePath = './asteroide_texture') {
+export function createAsteroidMaterial(textureLoader, basePath = './textures/asteroide_texture') {
     const colorMap = textureLoader.load(`${basePath}/color.jpg`);
     const aoMap = textureLoader.load(`${basePath}/ao.jpg`);
     const roughnessMap = textureLoader.load(`${basePath}/roughness.jpg`);

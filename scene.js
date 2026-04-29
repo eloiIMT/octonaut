@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createCustomMaterial, applyMaterialToObject, createAsteroidMaterial, applyAsteroidMaterial } from './materials.js';
 import { initAnimations, updateAnimations } from './animations.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 export async function initScene() {
     const width = window.innerWidth, height = window.innerHeight;
@@ -32,9 +33,18 @@ export async function initScene() {
     const laserSound = new THREE.Audio(listener);
     const audioLoader = new THREE.AudioLoader();
 
-    audioLoader.load('./laser.ogg', (buffer) => {
+    audioLoader.load('./sounds/laser.ogg', (buffer) => {
         laserSound.setBuffer(buffer);
         laserSound.setVolume(0.5);
+    });
+
+    const ambientSound = new THREE.Audio(listener);
+
+    audioLoader.load('./sounds/space-ranger.mp3', (buffer) => {
+        ambientSound.setBuffer(buffer);
+        ambientSound.setLoop(true);
+        ambientSound.setVolume(0.1);
+        ambientSound.play();
     });
 
     window.addEventListener('pointerdown', () => {
@@ -72,6 +82,21 @@ export async function initScene() {
     const renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( width, height );
     document.body.appendChild( renderer.domElement );
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+
+    new RGBELoader().load('./textures/space.hdr', (hdrTexture) => {
+        hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
+
+        const envMap = pmrem.fromEquirectangular(hdrTexture).texture;
+
+        scene.environment = envMap;
+        scene.background = envMap;
+
+        hdrTexture.dispose();
+        pmrem.dispose();
+    });
 
     const controls = new OrbitControls( camera, renderer.domElement );
     controls.enableDamping = true;
