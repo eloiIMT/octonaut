@@ -1,4 +1,4 @@
-import * as THREE from '../three.js/build/three.module.js';
+import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { createCustomMaterial, applyMaterialToObject, createAsteroidMaterial, applyAsteroidMaterial } from './materials.js';

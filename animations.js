@@ -1,4 +1,4 @@
-import * as THREE from '../three.js/build/three.module.js';
+import * as THREE from 'three';
 let mixer = null;
 let shootAction = null;
 let shootDuration = 0;
